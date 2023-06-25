@@ -5,10 +5,13 @@ const productController = {
   async getAll(req, res) {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
+    const type = req.query.type
+    const title = req.query.title
+
     const skip = (page - 1) * limit
 
     try {
-      const productList = await Product.find()
+      const productList = await Product.find({ type, title })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
