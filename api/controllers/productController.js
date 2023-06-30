@@ -3,7 +3,7 @@ const Product = require('../models/product')
 const productController = {
   // get all products
   async getAll(req, res) {
-    const { page = 1, limit = 10, title, price } = req.query
+    const { page = 1, limit = 10, title = '', price = '' } = req.query
     const skip = (page - 1) * limit
 
     try {
