@@ -42,6 +42,16 @@ const subscribeController = {
 
   // add a new Subscribe
   async add(req, res) {
+    const subscribeList = await Subscribe.find({ email: req.body.email })
+
+    if (subscribeList) {
+      return res.status(400).json({
+        message: 'Email already exists',
+        error: 1,
+        data: null,
+      })
+    }
+
     try {
       const subscribe = new Subscribe({
         ...req.body,
