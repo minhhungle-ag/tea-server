@@ -3,11 +3,23 @@ const Product = require('../models/product')
 const productController = {
   // get all products
   async getAll(req, res) {
-    const { page = 1, limit = 10, title = '', price = '' } = req.query
+    const filters = {}
+
+    if (req.query.searchKey)
+      filters[`$or`] = [
+        {
+          title: { $regex: req.query.searchKey },
+        },
+      ]
+
+    if (req.query.type) filters.type = req.query.type
+
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
     const skip = (page - 1) * limit
 
     try {
-      const productList = await Product.find({ title, price })
+      const productList = await Product.find(filters)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
