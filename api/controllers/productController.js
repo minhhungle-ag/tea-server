@@ -3,20 +3,17 @@ const Product = require('../models/product')
 const productController = {
   // get all products
   async getAll(req, res) {
+    const { page, limit, searchKey, type, priceFrom, priceTo } = req.query
+
     const filters = {}
+    // search multiple
+    if (searchKey) filters.title = { $regex: searchKey, $options: 'i' }
+    if (type) filters.type = type
+    if (priceFrom && priceTo) filters.price = { $gte: priceFrom, $lte: priceTo }
 
-    if (req.query.searchKey)
-      filters[`$or`] = [
-        {
-          title: { $regex: req.query.searchKey },
-        },
-      ]
-
-    if (req.query.type) filters.type = req.query.type
-
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const currentPage = parseInt(page) || 1
+    const currentLimit = parseInt(limit) || 10
+    const skip = (currentPage - 1) * currentLimit
 
     try {
       const productList = await Product.find(filters)
@@ -24,15 +21,15 @@ const productController = {
         .skip(skip)
         .limit(limit)
 
-      const total = await Product.countDocuments()
-      const totalPages = Math.ceil(total / limit)
+      const total = await Product.countDocuments(filters)
+      const totalPages = Math.ceil(total / currentLimit)
 
       res.status(200).json({
         data: {
           data: productList,
           pagination: {
-            page,
-            limit,
+            page: currentPage,
+            limit: currentLimit,
             totalPages,
             total,
           },
