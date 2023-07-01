@@ -8,6 +8,7 @@ const { default: mongoose } = require('mongoose')
 
 const productRouter = require('./api/routes/product')
 const postRouter = require('./api/routes/post')
+const subscribeRouter = require('./api/routes/subscribe')
 
 // Load environment variables
 dotenv.config()
@@ -45,8 +46,10 @@ app.use((req, res, next) => {
   next()
 })
 
+// routes
 app.use('/api/products', productRouter)
 app.use('/api/posts', postRouter)
+app.use('/api/subscribe', subscribeRouter)
 
 // Handle 404 errors
 app.use((req, res, next) => {

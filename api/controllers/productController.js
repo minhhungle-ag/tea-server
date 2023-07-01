@@ -6,7 +6,6 @@ const productController = {
     const { page, limit, searchKey, type, priceFrom, priceTo } = req.query
 
     const filters = {}
-    // search multiple
     if (searchKey) filters.title = { $regex: searchKey, $options: 'i' }
     if (type) filters.type = type
     if (priceFrom && priceTo) filters.price = { $gte: priceFrom, $lte: priceTo }
@@ -19,7 +18,7 @@ const productController = {
       const productList = await Product.find(filters)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit)
+        .limit(currentLimit)
 
       const total = await Product.countDocuments(filters)
       const totalPages = Math.ceil(total / currentLimit)
@@ -34,7 +33,7 @@ const productController = {
             total,
           },
         },
-        message: 'success',
+        message: 'Successfully',
         error: 0,
       })
     } catch (error) {
@@ -62,7 +61,7 @@ const productController = {
       }
 
       res.status(200).json({
-        message: 'success',
+        message: 'Successfully',
         error: 0,
         data: product,
       })

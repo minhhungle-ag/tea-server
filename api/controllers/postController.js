@@ -3,25 +3,35 @@ const Post = require('../models/post')
 const postController = {
   // get all posts
   async getAll(req, res) {
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const { page, limit, searchKey } = req.query
+
+    const filters = {}
+    // search multiple
+    if (searchKey)
+      filters.$or = [
+        { author: { $regex: searchKey, $options: 'i' } },
+        { title: { $regex: searchKey, $options: 'i' } },
+      ]
+
+    const currentPage = parseInt(page) || 1
+    const currentLimit = parseInt(limit) || 10
+    const skip = (currentPage - 1) * currentLimit
 
     try {
-      const postList = await Post.find()
+      const postList = await Post.find(filters)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit)
+        .limit(currentLimit)
 
-      const total = await Post.countDocuments()
-      const totalPages = Math.ceil(total / limit)
+      const total = await Post.countDocuments(filters)
+      const totalPages = Math.ceil(total / currentLimit)
 
       res.status(200).json({
         data: {
           data: postList,
           pagination: {
-            page,
-            limit,
+            page: currentPage,
+            limit: currentLimit,
             totalPages,
             total,
           },
