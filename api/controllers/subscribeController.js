@@ -15,7 +15,7 @@ const subscribeController = {
         .skip(skip)
         .limit(limit)
 
-      const total = await Subscribe.countDocuments(filters)
+      const total = await Subscribe.countDocuments()
       const totalPages = Math.ceil(total / currentLimit)
 
       res.status(200).json({
