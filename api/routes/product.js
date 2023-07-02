@@ -3,19 +3,19 @@ const { productController } = require('../controllers/productController')
 
 const router = express.Router()
 
-// Get all products
+// Get all
 router.get('/', productController.getAll)
 
-// Get a single product
+// Get by id
 router.get('/:id', productController.getById)
 
-// Create a new product
+// Create
 router.post('/', productController.add)
 
-// Update a product
+// Update
 router.put('/:id', productController.edit)
 
-// Delete a product
+// Delete
 router.delete('/:id', productController.remove)
 
 module.exports = router

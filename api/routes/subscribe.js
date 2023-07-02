@@ -3,10 +3,10 @@ const { subscribeController } = require('../controllers/subscribeController')
 
 const router = express.Router()
 
-// Get all products
+// Get all
 router.get('/', subscribeController.getAll)
 
-// Create a new product
+// Create
 router.post('/', subscribeController.add)
 
 module.exports = router

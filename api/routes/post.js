@@ -3,19 +3,19 @@ const { postController } = require('../controllers/postController')
 
 const router = express.Router()
 
-// Get all products
+// Get all
 router.get('/', postController.getAll)
 
-// Get a single product
+// Get by id
 router.get('/:id', postController.getById)
 
-// Create a new product
+// Create
 router.post('/', postController.add)
 
-// Update a product
+// Update
 router.put('/:id', postController.edit)
 
-// Delete a product
+// Delete
 router.delete('/:id', postController.remove)
 
 module.exports = router
